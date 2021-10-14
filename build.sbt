@@ -18,7 +18,17 @@ lazy val blog = project
   .settings(
     laikaTheme := Theme.empty,
 
-    git.remoteRepo := "git@github.com:daddykotex/blog-sbt.git",
+    git.remoteRepo := {
+      val repo = "blog-sbt"
+      val username = "daddykotex"
+
+      if (insideCI.value) {
+        val token = sys.env("GITHUB_TOKEN")
+        s"https://$username:$token@github.com/$username/$repo.git"
+      } else {
+        s"git@github.com:$username/$repo.git"
+      }
+    },
     ghpagesNoJekyll := true,
     ghpagesPrivateMappings  := {
       val targetF = (laikaSite / target).value
