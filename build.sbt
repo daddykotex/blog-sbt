@@ -37,6 +37,7 @@ lazy val blog = project
   .enablePlugins(GhpagesPlugin)
   .settings(
     laikaTheme := Theme.empty,
+    laikaExtensions += CustomDirective,
 
     configureGit := {
       import sys.process._
