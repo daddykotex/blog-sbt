@@ -105,4 +105,4 @@ jobs:
           tar xf targets.tar
           rm targets.tar
 
-      - run: sbt ++${{ matrix.scala }} blog/ghpagesPushSite
+      - run: sbt ++${{ matrix.scala }} blog/configureGit blog/ghpagesPushSite
