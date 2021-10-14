@@ -54,7 +54,7 @@ jobs:
       - run: sbt ++${{ matrix.scala }} blog/laikaSite
 
       - name: Compress target directories
-        run: tar cf targets.tar target blog/target project/target
+        run: tar cvf targets.tar target blog/target project/target
 
       - name: Upload target directories
         uses: actions/upload-artifact@v2
@@ -102,7 +102,7 @@ jobs:
 
       - name: Inflate target directories (2.13.3)
         run: |
-          tar xf targets.tar
+          tar xvf targets.tar
           rm targets.tar
 
       - run: sbt ++${{ matrix.scala }} blog/ghpagesPushSite
