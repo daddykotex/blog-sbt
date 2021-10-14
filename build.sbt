@@ -26,8 +26,8 @@ lazy val blog = project
       val logger = sLog.value
 
       val commands = Seq(
-        Seq("git", "config", "user.email", "bot@davidfrancoeur.com"),
-        Seq("git", "config", "user.name", "Github Actions")
+        Seq("git", "config", "--global", "user.email", "bot@davidfrancoeur.com"),
+        Seq("git", "config", "--global", "user.name", "Github Actions")
       )
 
       commands.foreach(_.!!(logger))
