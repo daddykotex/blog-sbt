@@ -1,3 +1,4 @@
+import laika.theme.Theme
 
 lazy val root = (project in file(".")).
   settings(
@@ -6,4 +7,10 @@ lazy val root = (project in file(".")).
       scalaVersion := "2.13.3"
     )),
     name := "blog-sbt"
+  )
+
+lazy val blog = project
+  .enablePlugins(LaikaPlugin)
+  .settings(
+    laikaTheme := Theme.empty
   )
