@@ -1,6 +1,7 @@
 import laika.theme.Theme
 
 lazy val configureGit = taskKey[Unit]("Configure git to push from Github actions over https")
+lazy val botUsername = "bot@davidfrancoeur.com"
 
 lazy val root = (project in file(".")).
   settings(
@@ -9,7 +10,24 @@ lazy val root = (project in file(".")).
       scalaVersion := "2.13.3",
 
       githubWorkflowBuild := Seq(WorkflowStep.Sbt(List("blog/laikaSite"))),
-      githubWorkflowPublish := Seq(WorkflowStep.Sbt(List("blog/configureGit", "blog/ghpagesPushSite")))
+      githubWorkflowPublish := {
+        val generated = Path.relativeTo(file("."))((blog / laikaSite / target).value).getOrElse(throw new RuntimeException("Expecting a path."))
+        Seq(
+          WorkflowStep.Sbt(List("blog/configureGit", "blog/ghpagesPushSite")),
+          WorkflowStep.Use(
+            UseRef.Public("cpina", "github-action-push-to-another-repository", "2ebe0cc15fc6a8e63c3658c119525bf1aead4418"),
+            name = Some("Push to other repository"),
+            params = Map(
+              "source-directory" -> generated,
+              "destination-github-username" -> "daddykotex",
+              "destination-repository-name" -> "blog-sbt-generated",
+              "user-email" -> botUsername,
+              "target-branch" -> "main",
+            ),
+            env = Map("API_TOKEN_GITHUB" -> "${{ secrets.API_TOKEN_GITHUB }}")
+          )
+        )
+      }
     )),
     name := "blog-sbt"
   )
@@ -26,7 +44,7 @@ lazy val blog = project
       val logger = sLog.value
 
       val commands = Seq(
-        Seq("git", "config", "--global", "user.email", "bot@davidfrancoeur.com"),
+        Seq("git", "config", "--global", "user.email", botUsername),
         Seq("git", "config", "--global", "user.name", "Github Actions")
       )
 

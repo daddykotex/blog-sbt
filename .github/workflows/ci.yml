@@ -106,3 +106,14 @@ jobs:
           rm targets.tar
 
       - run: sbt ++${{ matrix.scala }} blog/configureGit blog/ghpagesPushSite
+
+      - name: Push to other repository
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
+        uses: cpina/github-action-push-to-another-repository@2ebe0cc15fc6a8e63c3658c119525bf1aead4418
+        with:
+          target-branch: main
+          destination-github-username: daddykotex
+          user-email: bot@davidfrancoeur.com
+          source-directory: blog/target/docs/site
+          destination-repository-name: blog-sbt-generated
